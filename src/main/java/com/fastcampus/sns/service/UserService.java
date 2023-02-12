@@ -16,9 +16,10 @@ public class UserService {
 
     private final UserEntityRepository userEntityRepository;
     public User join(String userName, String password) {
-        userEntityRepository.findByUserName(userName).ifPresent(it -> {
-                    throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userName));
-                });
+
+        if (userEntityRepository.findByUserName(userName).isPresent()) {
+            throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userName));
+        }
 
         UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, password));
         return User.fromEntity(userEntity);
