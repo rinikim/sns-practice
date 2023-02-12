@@ -1,0 +1,19 @@
+spring:
+  jpa:
+    database: postgresql
+#    hibernae.dailect: org.hibernate.dilect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    hikari:
+      maximum-pool-size: 4
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: test
+    password: 1234
+    platform: postgres
+    driver-class-name: org.postgresql.Driver
