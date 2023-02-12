@@ -1,5 +1,6 @@
 package com.fastcampus.sns.service;
 
+import com.fastcampus.sns.exception.ErrorCode;
 import com.fastcampus.sns.exception.SnsApplicationException;
 import com.fastcampus.sns.model.User;
 import com.fastcampus.sns.model.entity.UserEntity;
@@ -15,18 +16,20 @@ public class UserService {
 
     private final UserEntityRepository userEntityRepository;
     public User join(String userName, String password) {
+        userEntityRepository.findByUserName(userName).ifPresent(it -> {
+                    throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, String.format("%s is duplicated", userName));
+                });
 
-        Optional<UserEntity> userEntity = userEntityRepository.findByUserName(userName);
-        userEntityRepository.save(new UserEntity());
-        return new User();
+        UserEntity userEntity = userEntityRepository.save(UserEntity.of(userName, password));
+        return User.fromEntity(userEntity);
     }
 
     public String login(String userName, String password) {
         UserEntity userEntity = userEntityRepository.findByUserName(userName)
-                .orElseThrow(SnsApplicationException::new);
+                .orElseThrow(() -> new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, ""));
 
         if (!userEntity.getPassword().equals(password)) {
-            throw new SnsApplicationException();
+            throw new SnsApplicationException(ErrorCode.DUPLICATED_USER_NAME, "");
         }
         return "";
     }

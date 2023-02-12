@@ -1,9 +1,14 @@
 package com.fastcampus.sns.controller;
 
+import com.fastcampus.sns.controller.request.UserJoinRequest;
+import com.fastcampus.sns.model.User;
+import com.fastcampus.sns.response.Response;
+import com.fastcampus.sns.response.UserJoinResponse;
 import com.fastcampus.sns.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -14,15 +19,14 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/join")
-    public void join() {
-        String userName = "";
-        String password = "";
-        userService.join(userName, password);
+    public Response<UserJoinResponse> join(@RequestParam UserJoinRequest request) {
+        User user = userService.join(request.getUserName(), request.getPassword());
+        return Response.success(UserJoinResponse.fromUser(user));
     }
 
     @PostMapping("/login")
-    public void login() {
-        userService.login(userName, password);
+    public void login(@RequestParam UserJoinRequest request) {
+        userService.login(request.getUserName(), request.getPassword());
     }
 }
 
