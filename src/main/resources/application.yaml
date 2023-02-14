@@ -17,3 +17,7 @@ spring:
     password: 1234
     platform: postgres
     driver-class-name: org.postgresql.Driver
+jwt:
+  secret-key: fast-campus.simple_sns_2022_secret_key
+  # 30Days
+  token.expired-time-ms: 2592000000
