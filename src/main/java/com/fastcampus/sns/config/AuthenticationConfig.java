@@ -1,6 +1,7 @@
 package com.fastcampus.sns.config;
 
 import com.fastcampus.sns.config.filter.JwtTokenFilter;
+import com.fastcampus.sns.exception.CustomAuthenticationEntryPoint;
 import com.fastcampus.sns.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,9 +32,9 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 // 매번 요청이 들어올 때 마다 필터를 둬가지고 들어온 토큰이 어떤 유저를 가리키는지 확인
-                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class);
-//                .and()
-//                .exceptionHandling()
+                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
     }
 }
