@@ -34,7 +34,7 @@ public class PostControllerTest   {
         String title = "title";
         String body = "body";
 
-        mockMvc.perform(post("/api/vi/posts")
+        mockMvc.perform(post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new PostCreateRequest(title, body)))
                 ).andDo(print())
@@ -50,11 +50,11 @@ public class PostControllerTest   {
 
         // 로그인을 하지 않은 경우
 
-        mockMvc.perform(post("/api/vi/posts")
+        mockMvc.perform(post("/api/v1/posts")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new PostCreateRequest(title, body)))
                 ).andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isUnauthorized());
 
     }
 }
