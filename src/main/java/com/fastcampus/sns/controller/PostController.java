@@ -17,8 +17,11 @@ public class PostController {
 
     private final PostService postService;
 
+    /**
+     * filter를 설정해주면 context에 넣어준 값을 Authentication로 받아올 수 있음
+     */
     @PostMapping
-    public Response<Void> create(@RequestBody PostCreateRequest request, Authentication authentication) {   // filter를 설정해주면 Authentication을 받아올 수 있음
+    public Response<Void> create(@RequestBody PostCreateRequest request, Authentication authentication) {
         postService.crete(request.getTitle(), request.getBody(), authentication.getName());
         return Response.success(null);
     }

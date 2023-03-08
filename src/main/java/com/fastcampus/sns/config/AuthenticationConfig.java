@@ -1,6 +1,9 @@
 package com.fastcampus.sns.config;
 
 import com.fastcampus.sns.config.filter.JwtTokenFilter;
+import com.fastcampus.sns.service.UserService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -10,7 +13,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserService userService;
+    @Value("${jwt.secret-key}")
+    private String key;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -22,7 +30,8 @@ public class AuthenticationConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                // 매번 요청이 들어올 때 마다 필터를 둬가지고 들어온 토큰이 어떤 유저를 가리키는지 확인
+                .addFilterBefore(new JwtTokenFilter(key, userService), UsernamePasswordAuthenticationFilter.class);
 //                .and()
 //                .exceptionHandling()
 
